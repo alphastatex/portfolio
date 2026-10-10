@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Иван — Frontend Developer</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>И</text></svg>">
+  <meta name="description" content="Портфолио фронтенд-разработчика. Кофейня Омбре, Барбершоп BRUTAL STYLE.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="#" class="logo">
+  <span class="logo-short">И.</span>
+  <span class="logo-full">Alphastatex</span>
+</a>
+    <ul class="nav-links">
+      <li><a href="#work">Работы</a></li>
+      <li><a href="#about">Обо мне</a></li>
+      <li><a href="#contact">Контакты</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="hero-label">Frontend Developer · Москва</p>
+        <h1>Делаю сайты,<br>которые <em>работают</em><br>и приносят заявки.</h1>
+        <p class="hero-desc">
+          Специализируюсь на лендингах с интеграцией Telegram-ботов, 
+          анимациями и чистым кодом. Проекты в продакшене.
+        </p>
+        <a href="#work" class="hero-cta">Смотреть проекты ↓</a>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="work" class="projects">
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>Избранные работы</h2>
+      </div>
+
+      <div class="project-list">
+        <!-- Project 1 -->
+        <article class="project">
+          <div class="project-image">
+            <img src="images/ombre-hero.png" alt="Кофейня Омбре">
+          </div>
+          <div class="project-info">
+            <div class="project-meta">
+              <span class="project-year">2026</span>
+              <span class="project-type">Лендинг · Telegram Mini App</span>
+            </div>
+            <h3 class="project-title">Кофейня Омбре</h3>
+            <p class="project-desc">
+              Уютный лендинг для кофейни в Хорошево-Мневниках. 
+              Бронирование столика через форму, заявки мгновенно 
+              приходят в Telegram владельца через Cloudflare Worker.
+            </p>
+            <ul class="project-stack">
+              <li>HTML / CSS</li>
+              <li>Vanilla JS</li>
+              <li>Cloudflare Workers</li>
+              <li>Telegram Bot API</li>
+            </ul>
+            <div class="project-links">
+              <a href="https://alphastatex.github.io/ombre-coffee/" target="_blank" class="link-live">Live Demo ↗</a>
+              <a href="https://github.com/alphastatex/ombre-coffee" target="_blank" class="link-code">GitHub ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="project project-alt">
+          <div class="project-info">
+            <div class="project-meta">
+              <span class="project-year">2026</span>
+              <span class="project-type">Лендинг · Telegram Mini App</span>
+            </div>
+            <h3 class="project-title">Барбершоп BRUTAL STYLE</h3>
+            <p class="project-desc">
+              Бруталистичный сайт барбершопа с 12 мастерами, 
+              модалками профилей и полной интеграцией Telegram. 
+              Токен бота спрятан в Cloudflare Worker.
+            </p>
+            <ul class="project-stack">
+              <li>HTML / CSS</li>
+              <li>Vanilla JS · JSDoc</li>
+              <li>Vitest + Playwright</li>
+              <li>Cloudflare Workers</li>
+            </ul>
+            <div class="project-links">
+              <a href="https://alphastatex.github.io/barbershop/" target="_blank" class="link-live">Live Demo ↗</a>
+              <a href="https://github.com/alphastatex/barbershop" target="_blank" class="link-code">GitHub ↗</a>
+            </div>
+          </div>
+          <div class="project-image">
+            <img src="images/barbershop-hero.png" alt="Барбершоп BRUTAL STYLE">
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="about">
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>Обо мне</h2>
+      </div>
+      <div class="about-content">
+        <p class="about-text">
+          Пишу чистый фронтенд без фреймворков. Верю, что хороший сайт - 
+          это не набор библиотек, а продуманная типографика, плавные анимации 
+          и надёжная отправка форм.
+        </p>
+        <p class="about-text">
+          Каждый проект довожу до продакшена: деплой на GitHub Pages, 
+          бэкенд на Cloudflare Workers, интеграция с Telegram. 
+          Код покрыт тестами и типизирован через JSDoc.
+        </p>
+      </div>
+
+      <div class="skills">
+        <div class="skill-group">
+          <h4>Frontend</h4>
+          <ul>
+            <li>HTML5 / CSS3</li>
+            <li>JavaScript ES6+</li>
+            <li>TypeScript (JSDoc)</li>
+            <li>Анимации · GSAP</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h4>Backend</h4>
+          <ul>
+            <li>Cloudflare Workers</li>
+            <li>Telegram Bot API</li>
+            <li>REST API</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h4>Инструменты</h4>
+          <ul>
+            <li>Git · GitHub</li>
+            <li>Vitest · Playwright</li>
+            <li>Wrangler</li>
+            <li>VS Code</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="contact">
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Связаться</h2>
+      </div>
+      <div class="contact-content">
+        <p class="contact-text">
+          Открыт к предложениям по лендингам, интеграциям с Telegram 
+          и доработке существующих проектов.
+        </p>
+        <ul class="contact-links">
+          <ul class="contact-links">
+  <li><a href="https://t.me/ivanchernoshey" target="_blank">Telegram ↗</a></li>
+  <li><a href="https://github.com/alphastatex" target="_blank">GitHub ↗</a></li>
+  <li><a href="mailto:alphastatex@gmail.com">alphastatex@gmail.com</a></li>
+</ul>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Иван · Сделано с любовью к коду <3</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
