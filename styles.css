@@ -64,13 +64,13 @@ body {
 .logo-full {
   display: inline-block;
   overflow: hidden;
-  clip-path: inset(0 100% 0 0); /* Скрыт справа */
+  clip-path: inset(0 100% 0 0);
   transition: clip-path 0.5s var(--ease);
   margin-left: 4px;
 }
 
 .logo:hover .logo-full {
-  clip-path: inset(0 0 0 0); /* Раскрывается слева направо */
+  clip-path: inset(0 0 0 0);
 }
 
 .nav-links {
@@ -89,6 +89,36 @@ body {
 
 .nav-links a:hover {
   color: var(--text);
+}
+
+/* BURGER TOGGLE (hidden on desktop) */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 101;
+  position: relative;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  margin: 5px 0;
+  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+
+.nav-toggle.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-toggle.is-open span:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 /* HERO */
@@ -252,6 +282,15 @@ section {
   max-width: 480px;
 }
 
+.project-desc code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  background: var(--border);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--text);
+}
+
 .project-stack {
   list-style: none;
   display: flex;
@@ -302,8 +341,37 @@ section {
   max-width: 1400px;
   margin: 0 auto 80px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  grid-template-columns: 320px 1fr; /* Фото слева (фиксированная ширина), текст справа */
+  gap: 60px;
+  align-items: start;
+}
+
+.about-image {
+  width: 100%;
+  aspect-ratio: 4/5; /* Пропорции для портрета */
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--border);
+}
+
+.about-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(100%) contrast(1.1); /* Ч/Б эффект */
+  transition: filter 0.5s var(--ease), transform 0.8s var(--ease);
+}
+
+.about-image:hover img {
+  filter: grayscale(0%); /* Возвращаем цвет при наведении */
+  transform: scale(1.03);
+}
+
+.about-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* Расстояние между абзацами */
 }
 
 .about-text {
@@ -396,38 +464,67 @@ section {
   margin: 0 auto;
 }
 
-/* REVEAL */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+/* REDUCED MOTION */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* RESPONSIVE */
 @media (max-width: 968px) {
   .nav { padding: 20px 24px; }
-  .nav-links { display: none; }
-  
+
+  .nav-toggle { display: block; }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    height: 100dvh;
+    width: 70vw;
+    max-width: 320px;
+    background: var(--bg);
+    flex-direction: column;
+    padding: 100px 40px 40px;
+    gap: 32px;
+    transform: translateX(100%);
+    transition: transform 0.4s var(--ease);
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.06);
+  }
+
+  .nav-links.is-open {
+    transform: translateX(0);
+  }
+
+  .nav-links a {
+    font-size: 18px;
+  }
+
   section { padding: 80px 24px; }
   .hero { padding: 120px 24px 60px; }
-  
+
   .project,
   .project-alt {
     grid-template-columns: 1fr;
     gap: 40px;
   }
-  
+
   .project-alt .project-info { order: 1; }
   .project-alt .project-image { order: 2; }
-  
+
+  /* На мобилках фото встаёт над текстом */
   .about-content { grid-template-columns: 1fr; gap: 40px; }
+  .about-image { max-width: 320px; margin: 0 auto; aspect-ratio: 1/1; } /* Делаем квадратным для мобилок */
+  
   .skills { grid-template-columns: 1fr; gap: 40px; }
   .contact-content { grid-template-columns: 1fr; gap: 40px; }
-  
+
   .project-list { gap: 80px; }
 }

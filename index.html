@@ -4,37 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Иван — Frontend Developer</title>
-    <!-- Open Graph / Facebook / Telegram -->
+  <!-- Open Graph / Telegram / VK -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://alphastatex.github.io/portfolio/">
   <meta property="og:title" content="Иван — Frontend Developer">
   <meta property="og:description" content="Делаю сайты, которые работают и приносят заявки. Кофейня Омбре, Барбершоп BRUTAL STYLE.">
   <meta property="og:image" content="https://alphastatex.github.io/portfolio/images/ombre-hero.png">
-
-  <!-- Twitter / LinkedIn -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://alphastatex.github.io/portfolio/">
-  <meta property="twitter:title" content="Иван — Frontend Developer">
-  <meta property="twitter:description" content="Делаю сайты, которые работают и приносят заявки. Кофейня Омбре, Барбершоп BRUTAL STYLE.">
-  <meta property="twitter:image" content="https://alphastatex.github.io/portfolio/images/ombre-hero.png">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>И</text></svg>">
   <meta name="description" content="Портфолио фронтенд-разработчика. Кофейня Омбре, Барбершоп BRUTAL STYLE.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
   <nav class="nav">
     <a href="#" class="logo">
-  <span class="logo-short">И.</span>
-  <span class="logo-full">Alphastatex</span>
-</a>
-    <ul class="nav-links">
+      <span class="logo-short">И.</span>
+      <span class="logo-full">Alphastatex</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
       <li><a href="#work">Работы</a></li>
       <li><a href="#about">Обо мне</a></li>
       <li><a href="#contact">Контакты</a></li>
     </ul>
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-label="Открыть меню"
+      aria-expanded="false"
+      aria-controls="nav-links"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </nav>
 
   <main>
@@ -44,7 +48,7 @@
         <p class="hero-label">Frontend Developer · Москва</p>
         <h1>Делаю сайты,<br>которые <em>работают</em><br>и приносят заявки.</h1>
         <p class="hero-desc">
-          Специализируюсь на лендингах с интеграцией Telegram-ботов, 
+          Специализируюсь на лендингах с интеграцией Telegram-ботов,
           анимациями и чистым кодом. Проекты в продакшене.
         </p>
         <a href="#work" class="hero-cta">Смотреть проекты ↓</a>
@@ -67,19 +71,23 @@
           <div class="project-info">
             <div class="project-meta">
               <span class="project-year">2026</span>
-              <span class="project-type">Лендинг · Telegram Mini App</span>
+              <span class="project-type">Лендинг · Mini App + CRM</span>
             </div>
             <h3 class="project-title">Кофейня Омбре</h3>
             <p class="project-desc">
-              Уютный лендинг для кофейни в Хорошево-Мневниках. 
-              Бронирование столика через форму, заявки мгновенно 
-              приходят в Telegram владельца через Cloudflare Worker.
+              Уютный лендинг для кофейни в Хорошево-Мневниках. Бронирование
+              столика через форму, заявки мгновенно приходят в Telegram
+              владельца. Внутри — защищённая CRM-админка: Zero Trust-пароль
+              в секретах, Bearer-токен, смена статусов заявок и экспорт в CSV.
+              Данные в Cloudflare KV, отправка асинхронная через
+              <code>ctx.waitUntil()</code>.
             </p>
             <ul class="project-stack">
               <li>HTML / CSS</li>
               <li>Vanilla JS</li>
-              <li>Cloudflare Workers</li>
-              <li>Telegram Bot API</li>
+              <li>Cloudflare Workers + KV</li>
+              <li>Zero Trust · CORS · XSS</li>
+              <li>Vitest + Playwright</li>
             </ul>
             <div class="project-links">
               <a href="https://alphastatex.github.io/ombre-coffee/" target="_blank" class="link-live">Live Demo ↗</a>
@@ -97,8 +105,8 @@
             </div>
             <h3 class="project-title">Барбершоп BRUTAL STYLE</h3>
             <p class="project-desc">
-              Бруталистичный сайт барбершопа с 12 мастерами, 
-              модалками профилей и полной интеграцией Telegram. 
+              Бруталистичный сайт барбершопа с 12 мастерами,
+              модалками профилей и полной интеграцией Telegram.
               Токен бота спрятан в Cloudflare Worker.
             </p>
             <ul class="project-stack">
@@ -125,17 +133,24 @@
         <span class="section-number">02</span>
         <h2>Обо мне</h2>
       </div>
+      
+      <!-- Обновлённый блок с фото -->
       <div class="about-content">
-        <p class="about-text">
-          Пишу чистый фронтенд без фреймворков. Верю, что хороший сайт - 
-          это не набор библиотек, а продуманная типографика, плавные анимации 
-          и надёжная отправка форм.
-        </p>
-        <p class="about-text">
-          Каждый проект довожу до продакшена: деплой на GitHub Pages, 
-          бэкенд на Cloudflare Workers, интеграция с Telegram. 
-          Код покрыт тестами и типизирован через JSDoc.
-        </p>
+        <div class="about-image">
+          <img src="images/me.png" alt="Иван — Frontend Developer">
+        </div>
+        <div class="about-text-wrapper">
+          <p class="about-text">
+            Пишу чистый фронтенд без фреймворков. Верю, что хороший сайт —
+            это не набор библиотек, а продуманная типографика, плавные анимации
+            и надёжная отправка форм.
+          </p>
+          <p class="about-text">
+            Каждый проект довожу до продакшена: деплой на GitHub Pages,
+            бэкенд на Cloudflare Workers, интеграция с Telegram.
+            Код покрыт тестами и типизирован через JSDoc.
+          </p>
+        </div>
       </div>
 
       <div class="skills">
@@ -152,6 +167,7 @@
           <h4>Backend</h4>
           <ul>
             <li>Cloudflare Workers</li>
+            <li>Cloudflare KV</li>
             <li>Telegram Bot API</li>
             <li>REST API</li>
           </ul>
@@ -176,24 +192,25 @@
       </div>
       <div class="contact-content">
         <p class="contact-text">
-          Открыт к предложениям по лендингам, интеграциям с Telegram 
+          Открыт к предложениям по лендингам, интеграциям с Telegram
           и доработке существующих проектов.
         </p>
         <ul class="contact-links">
-          <ul class="contact-links">
-  <li><a href="https://t.me/ivanchernoshey" target="_blank">Telegram ↗</a></li>
-  <li><a href="https://github.com/alphastatex" target="_blank">GitHub ↗</a></li>
-  <li><a href="mailto:alphastatex@gmail.com">alphastatex@gmail.com</a></li>
-</ul>
+          <li><a href="https://t.me/ivanchernoshey" target="_blank">Telegram ↗</a></li>
+          <li><a href="https://github.com/alphastatex" target="_blank">GitHub ↗</a></li>
+          <li><a href="mailto:alphastatex@gmail.com">alphastatex@gmail.com</a></li>
         </ul>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <p>© 2026 Иван · Сделано с любовью к коду <3</p>
+    <p>© 2026 Иван · Сделано с любовью к коду &lt;3</p>
   </footer>
 
-  <script src="app.js"></script>
+  <!-- Подключаем GSAP локально -->
+  <script src="libs/gsap.min.js"></script>
+  <script src="libs/ScrollTrigger.min.js"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
