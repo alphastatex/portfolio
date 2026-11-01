@@ -11,7 +11,7 @@
   <meta property="og:url" content="https://alphastatex.github.io/portfolio/">
   <meta property="og:title" content="Иван — Frontend Developer">
   <meta property="og:description" content="Создаю сайты, которые работают и приносят заявки. Безопасно. Быстро. С характером.">
-  <meta property="og:image" content="https://alphastatex.github.io/portfolio/images/ombre-hero.png">
+  <meta property="og:image" content="https://alphastatex.github.io/portfolio/images/neon-arena-hero.png">
   
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>И</text></svg>">
   
@@ -20,7 +20,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="styles.css?v=4">
+  <!-- Обновил версию до v=5 для сброса кэша -->
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
   <!-- Шум на фоне -->
@@ -150,6 +151,37 @@
             <img src="images/barbershop-hero.png" alt="Барбершоп BRUTAL STYLE">
           </div>
         </article>
+
+        <!-- Project 3 (НОВЫЙ КЕЙС) -->
+        <article class="project">
+          <div class="project-image">
+            <!-- Не забудь положить скриншот в images/neon-arena-hero.png -->
+            <img src="images/neon-arena-hero.png" alt="Киберспортивный клуб NEON ARENA">
+          </div>
+          <div class="project-info">
+            <div class="project-meta">
+              <span class="project-year">2026</span>
+              <span class="project-type">Лендинг · Киберспорт</span>
+            </div>
+            <h3 class="project-title">Киберспортивный клуб NEON ARENA</h3>
+            <p class="project-desc">
+              Продающий лендинг клуба в Москве. Задача — продать не «часы за ПК», а атмосферу. 
+              Решение: премиум-интерактив на <strong>Vite + Vanilla JS</strong>. Boot screen, кастомный курсор-прицел, 
+              мышка-компаньон с 3 ролями по ScrollTrigger, Canvas 2D частицы и звук (Web Audio API). 
+              Модалка бронирования на 15 ПК, полная A11y-поддержка и адаптив.
+            </p>
+            <ul class="project-stack">
+              <li>Vanilla JS + Vite</li>
+              <li>GSAP + ScrollTrigger</li>
+              <li>Canvas 2D</li>
+              <li>Web Audio API</li>
+            </ul>
+            <div class="project-links">
+              <a href="https://alphastatex.github.io/neon-arena/" target="_blank" class="link-live magnetic">Live Demo ↗</a>
+              <a href="https://github.com/alphastatex/neon-arena" target="_blank" class="link-code magnetic">GitHub ↗</a>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -258,6 +290,7 @@
   <!-- GSAP -->
   <script src="libs/gsap.min.js"></script>
   <script src="libs/ScrollTrigger.min.js"></script>
-  <script src="app.js?v=4"></script>
+  <!-- Обновил версию до v=5 -->
+  <script src="app.js?v=5"></script>
 </body>
 </html>
