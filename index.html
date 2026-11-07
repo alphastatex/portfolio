@@ -20,18 +20,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
-  <!-- Обновил версию до v=6 для сброса кэша -->
-  <link rel="stylesheet" href="styles.css?v=6">
+  <!-- v=8 для сброса кэша -->
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
   <!-- Шум на фоне -->
   <div class="noise"></div>
 
-  <!-- Кастомный курсор: crosshair + точка, с blend-mode difference -->
-  <div class="cursor" aria-hidden="true">
-    <span class="cursor-line cursor-line--h"></span>
-    <span class="cursor-line cursor-line--v"></span>
-  </div>
+  <!-- Кастомный курсор: Рамка (Block/Frame) -->
+  <div class="cursor" aria-hidden="true"></div>
   <div class="cursor-dot" aria-hidden="true"></div>
 
   <nav class="nav">
@@ -71,21 +68,44 @@
       </div>
     </section>
 
-    <!-- MARQUEE -->
+    <!-- MARQUEE (ОБНОВЛЕННЫЙ) -->
     <div class="marquee">
-      <div class="marquee-content">
-        <span>Vanilla JS</span><span>✦</span>
-        <span>Cloudflare Workers</span><span>✦</span>
-        <span>Turnstile Anti-Spam</span><span>✦</span>
-        <span>Telegram Mini Apps</span><span>✦</span>
-        <span>GSAP Animations</span><span>✦</span>
-        <span>Zero Trust Security</span><span>✦</span>
-        <span>Vanilla JS</span><span>✦</span>
-        <span>Cloudflare Workers</span><span>✦</span>
-        <span>Turnstile Anti-Spam</span><span>✦</span>
-        <span>Telegram Mini Apps</span><span>✦</span>
-        <span>GSAP Animations</span><span>✦</span>
-        <span>Zero Trust Security</span><span>✦</span>
+      <!-- Верхняя строка (движется влево, заливка) -->
+      <div class="marquee-track">
+        <div class="marquee-group">
+          <span>Vanilla JS</span><span class="sep">+</span>
+          <span>Cloudflare Workers</span><span class="sep">+</span>
+          <span>Turnstile Anti-Spam</span><span class="sep">+</span>
+          <span>Telegram Mini Apps</span><span class="sep">+</span>
+          <span>GSAP Animations</span><span class="sep">+</span>
+        </div>
+        <!-- Дубликат для бесшовности -->
+        <div class="marquee-group" aria-hidden="true">
+          <span>Vanilla JS</span><span class="sep">+</span>
+          <span>Cloudflare Workers</span><span class="sep">+</span>
+          <span>Turnstile Anti-Spam</span><span class="sep">+</span>
+          <span>Telegram Mini Apps</span><span class="sep">+</span>
+          <span>GSAP Animations</span><span class="sep">+</span>
+        </div>
+      </div>
+
+      <!-- Нижняя строка (движется вправо, контур) -->
+      <div class="marquee-track marquee-track--reverse">
+        <div class="marquee-group marquee-group--outline">
+          <span>Zero Trust Security</span><span class="sep">+</span>
+          <span>Frontend Developer</span><span class="sep">+</span>
+          <span>Safe & Fast</span><span class="sep">+</span>
+          <span>Cloudflare KV</span><span class="sep">+</span>
+          <span>Web Audio API</span><span class="sep">+</span>
+        </div>
+        <!-- Дубликат для бесшовности -->
+        <div class="marquee-group marquee-group--outline" aria-hidden="true">
+          <span>Zero Trust Security</span><span class="sep">+</span>
+          <span>Frontend Developer</span><span class="sep">+</span>
+          <span>Safe & Fast</span><span class="sep">+</span>
+          <span>Cloudflare KV</span><span class="sep">+</span>
+          <span>Web Audio API</span><span class="sep">+</span>
+        </div>
       </div>
     </div>
 
@@ -292,7 +312,6 @@
   <!-- GSAP -->
   <script src="libs/gsap.min.js"></script>
   <script src="libs/ScrollTrigger.min.js"></script>
-  <!-- Обновил версию до v=6 -->
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>

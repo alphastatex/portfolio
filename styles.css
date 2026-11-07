@@ -35,53 +35,29 @@ body {
 }
 
 /* ============================================================
-   CUSTOM CURSOR — crosshair + dot, blend-mode difference
-   Идея: тонкий крест инвертирует цвет под собой, поэтому
-   курсор виден и на светлом, и на тёмном, и на фото.
+   CUSTOM CURSOR — Block/Frame
    ============================================================ */
 .cursor {
   position: fixed;
   top: 0;
   left: 0;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #fff;
   pointer-events: none;
   z-index: 10000;
   transform: translate(-50%, -50%);
   mix-blend-mode: difference;
-  will-change: transform, width, height;
-  transition: width 0.25s var(--ease), height 0.25s var(--ease);
-}
-
-.cursor-line {
-  position: absolute;
-  background: #fff; /* при difference белый инвертирует фон */
-  display: block;
-  transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
-}
-
-.cursor-line--h {
-  left: 0;
-  top: 50%;
-  width: 100%;
-  height: 1px;
-  transform: translateY(-50%);
-}
-
-.cursor-line--v {
-  top: 0;
-  left: 50%;
-  width: 1px;
-  height: 100%;
-  transform: translateX(-50%);
+  will-change: transform, width, height, background-color;
+  transition: width 0.3s var(--ease), height 0.3s var(--ease), background-color 0.3s var(--ease);
 }
 
 .cursor-dot {
   position: fixed;
   top: 0;
   left: 0;
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: #fff;
   pointer-events: none;
@@ -91,29 +67,19 @@ body {
   will-change: transform;
 }
 
-/* Hover на интерактив: крест сжимается, точка чуть растёт */
 .cursor.is-hover {
   width: 44px;
   height: 44px;
-}
-.cursor.is-hover .cursor-line--h {
-  transform: translateY(-50%) scaleX(0.5);
-}
-.cursor.is-hover .cursor-line--v {
-  transform: translateX(-50%) scaleY(0.5);
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Click: короткое «сжатие» креста */
 .cursor.is-down {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
-/* FIX: гарантированно скрываем нативный курсор на десктопе */
 @media (min-width: 969px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     cursor: none !important;
   }
 }
@@ -201,25 +167,78 @@ body {
 }
 .btn-outline:hover { border-color: var(--text); }
 
-/* MARQUEE */
+/* ============================================================
+   MARQUEE (Two-way typographic ping-pong)
+   ============================================================ */
 .marquee {
-  padding: 20px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-  overflow: hidden; white-space: nowrap; background: #f0f0eb;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--bg);
 }
-.marquee-content {
-  display: inline-block; animation: marquee 20s linear infinite;
-  font-family: var(--mono); font-size: 14px; color: var(--muted);
+
+.marquee-track {
+  display: flex;
+  white-space: nowrap;
+  width: max-content;
+  animation: marquee-left 30s linear infinite;
 }
-.marquee-content span { margin: 0 20px; }
-.marquee-content span:nth-child(even) { color: var(--accent); }
-@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+.marquee-track--reverse {
+  animation: marquee-right 35s linear infinite;
+}
+
+/* Останавливаем при наведении */
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-group {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding-right: 40px;
+  font-family: var(--sans);
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -1px;
+  color: var(--text);
+}
+
+/* Стиль для контурного текста во второй строке */
+.marquee-group--outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--muted);
+}
+
+.marquee-group .sep {
+  font-family: var(--mono);
+  font-size: 20px;
+  color: var(--accent);
+  font-weight: 400;
+  -webkit-text-stroke: 0;
+}
+
+@keyframes marquee-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
 
 /* SECTIONS */
-section { padding: 140px 60px; } /* чуть больше воздуха */
+section { padding: 140px 60px; }
 .section-header {
   display: flex; align-items: baseline; gap: 24px;
   margin-bottom: 100px; max-width: 1400px; margin-left: auto; margin-right: auto;
-  border-bottom: 1px solid var(--border); padding-bottom: 24px; /* редакционная линия */
+  border-bottom: 1px solid var(--border); padding-bottom: 24px;
 }
 .section-number { font-family: var(--mono); font-size: 13px; color: var(--muted); }
 .section-header h2 {
@@ -366,6 +385,8 @@ section { padding: 140px 60px; } /* чуть больше воздуха */
     cursor: auto !important;
   }
   .cursor, .cursor-dot { display: none; }
+  .marquee-track { animation: none; flex-wrap: wrap; white-space: normal; }
+  .marquee-group { flex-wrap: wrap; }
 }
 
 /* RESPONSIVE */
@@ -387,6 +408,8 @@ section { padding: 140px 60px; } /* чуть больше воздуха */
   .hero { padding: 120px 24px 60px; }
   
   .cursor, .cursor-dot { display: none; }
+
+  .marquee-group { font-size: 20px; gap: 20px; padding-right: 20px; }
   
   .project, .project-alt { grid-template-columns: 1fr; gap: 40px; }
   .project-alt .project-info { order: 1; }
