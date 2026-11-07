@@ -38,44 +38,58 @@ if (navToggle && navLinks) {
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
 }
 
-// Кастомный курсор (только для десктопа)
+// ==========================================
+// КАСТОМНЫЙ КУРСОР (crosshair + dot)
+// ==========================================
 const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
 if (!isTouchDevice) {
-  const cursor = /** @type {HTMLElement} */ (document.querySelector('.cursor'));
-  const follower = /** @type {HTMLElement} */ (document.querySelector('.cursor-follower'));
-  
-  let mouseX = 0, mouseY = 0, followerX = 0, followerY = 0;
+  // Явно указываем TS, что это HTMLElement, а не просто Element
+  const cursor = /** @type {HTMLElement | null} */ (document.querySelector('.cursor'));
+  const dot = /** @type {HTMLElement | null} */ (document.querySelector('.cursor-dot'));
 
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    if (cursor) cursor.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-  });
+  if (cursor && dot) {
+    // Сохраняем ссылки в const, чтобы TS не терял тип внутри замыканий
+    const cursorEl = cursor;
+    const dotEl = dot;
 
-  function animateFollower() {
-    followerX += (mouseX - followerX) * 0.15;
-    followerY += (mouseY - followerY) * 0.15;
-    if (follower) follower.style.transform = `translate(${followerX}px, ${followerY}px) translate(-50%, -50%)`;
-    requestAnimationFrame(animateFollower);
+    let mouseX = 0;
+    let mouseY = 0;
+    let dotX = 0;
+    let dotY = 0;
+
+    // Крест следует мгновенно
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorEl.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+    });
+
+    // Точка с легким сглаживанием
+    const animateDot = () => {
+      dotX += (mouseX - dotX) * 0.6;
+      dotY += (mouseY - dotY) * 0.6;
+      dotEl.style.transform = `translate(${dotX}px, ${dotY}px) translate(-50%, -50%)`;
+      requestAnimationFrame(animateDot);
+    };
+    animateDot();
+
+    // Hover на интерактив: крест расширяется, линии укорачиваются
+    const hoverTargets = document.querySelectorAll('a, button, .magnetic, .service-card, .project-image');
+    hoverTargets.forEach((el) => {
+      el.addEventListener('mouseenter', () => cursorEl.classList.add('is-hover'));
+      el.addEventListener('mouseleave', () => cursorEl.classList.remove('is-hover'));
+    });
+
+    // Click: короткое сжатие креста
+    document.addEventListener('mousedown', () => cursorEl.classList.add('is-down'));
+    document.addEventListener('mouseup', () => cursorEl.classList.remove('is-down'));
   }
-  animateFollower();
-
-  // Ховер-эффект на ссылки и кнопки
-  document.querySelectorAll('a, button, .magnetic, .service-card').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor?.classList.add('hover');
-      follower?.classList.add('hover');
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor?.classList.remove('hover');
-      follower?.classList.remove('hover');
-    });
-  });
 }
 
 // Магнитный эффект для кнопок
 const magneticElements = document.querySelectorAll('.magnetic');
-magneticElements.forEach(el => {
+magneticElements.forEach((el) => {
   el.addEventListener('mousemove', (e) => {
     const mouseEvent = /** @type {MouseEvent} */ (e);
     const rect = el.getBoundingClientRect();

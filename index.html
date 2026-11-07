@@ -20,16 +20,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
-  <!-- Обновил версию до v=5 для сброса кэша -->
-  <link rel="stylesheet" href="styles.css?v=5">
+  <!-- Обновил версию до v=6 для сброса кэша -->
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
   <!-- Шум на фоне -->
   <div class="noise"></div>
 
-  <!-- Кастомный курсор -->
-  <div class="cursor"></div>
-  <div class="cursor-follower"></div>
+  <!-- Кастомный курсор: crosshair + точка, с blend-mode difference -->
+  <div class="cursor" aria-hidden="true">
+    <span class="cursor-line cursor-line--h"></span>
+    <span class="cursor-line cursor-line--v"></span>
+  </div>
+  <div class="cursor-dot" aria-hidden="true"></div>
 
   <nav class="nav">
     <a href="#" class="logo">
@@ -152,10 +155,9 @@
           </div>
         </article>
 
-        <!-- Project 3 (НОВЫЙ КЕЙС) -->
+        <!-- Project 3 -->
         <article class="project">
           <div class="project-image">
-            <!-- Не забудь положить скриншот в images/neon-arena-hero.png -->
             <img src="images/neon-arena-hero.png" alt="Киберспортивный клуб NEON ARENA">
           </div>
           <div class="project-info">
@@ -290,7 +292,7 @@
   <!-- GSAP -->
   <script src="libs/gsap.min.js"></script>
   <script src="libs/ScrollTrigger.min.js"></script>
-  <!-- Обновил версию до v=5 -->
-  <script src="app.js?v=5"></script>
+  <!-- Обновил версию до v=6 -->
+  <script src="app.js?v=6"></script>
 </body>
 </html>
