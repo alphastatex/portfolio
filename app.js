@@ -39,33 +39,27 @@ if (navToggle && navLinks) {
 }
 
 // ==========================================
-// КАСТОМНЫЙ КУРСОР (crosshair + dot)
+// КАСТОМНЫЙ КУРСОР
 // ==========================================
 const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
 if (!isTouchDevice) {
-  // Явно указываем TS, что это HTMLElement, а не просто Element
   const cursor = /** @type {HTMLElement | null} */ (document.querySelector('.cursor'));
   const dot = /** @type {HTMLElement | null} */ (document.querySelector('.cursor-dot'));
 
   if (cursor && dot) {
-    // Сохраняем ссылки в const, чтобы TS не терял тип внутри замыканий
     const cursorEl = cursor;
     const dotEl = dot;
 
-    let mouseX = 0;
-    let mouseY = 0;
-    let dotX = 0;
-    let dotY = 0;
+    let mouseX = 0, mouseY = 0;
+    let dotX = 0, dotY = 0;
 
-    // Крест следует мгновенно
     document.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
       cursorEl.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
     });
 
-    // Точка с легким сглаживанием
     const animateDot = () => {
       dotX += (mouseX - dotX) * 0.6;
       dotY += (mouseY - dotY) * 0.6;
@@ -74,14 +68,12 @@ if (!isTouchDevice) {
     };
     animateDot();
 
-    // Hover на интерактив: крест расширяется, линии укорачиваются
     const hoverTargets = document.querySelectorAll('a, button, .magnetic, .service-card, .project-image');
     hoverTargets.forEach((el) => {
       el.addEventListener('mouseenter', () => cursorEl.classList.add('is-hover'));
       el.addEventListener('mouseleave', () => cursorEl.classList.remove('is-hover'));
     });
 
-    // Click: короткое сжатие креста
     document.addEventListener('mousedown', () => cursorEl.classList.add('is-down'));
     document.addEventListener('mouseup', () => cursorEl.classList.remove('is-down'));
   }
@@ -111,20 +103,76 @@ const ScrollTrigger = /** @type {any} */ (window).ScrollTrigger;
 if (gsap && ScrollTrigger) {
   gsap.registerPlugin(ScrollTrigger);
 
+  // ==========================================
+  // РЕАКТИВНЫЙ MARQUEE
+  // ==========================================
+  const marqueeRows = document.querySelectorAll('.marquee-row');
+
+  marqueeRows.forEach((row) => {
+    const track = row.querySelector('.marquee-track');
+    if (!track) return;
+
+    const isRight = row.getAttribute('data-direction') === 'right';
+    const direction = isRight ? 1 : -1;
+
+    // Дублируем контент ровно 2 раза для бесшовности
+    const content = track.innerHTML;
+    track.innerHTML = content + content;
+
+    // Создаем анимацию с правильным стартом для левой/правой строки
+    const tween = gsap.fromTo(track, 
+      { xPercent: isRight ? -50 : 0 },
+      {
+        xPercent: isRight ? 0 : -50,
+        repeat: -1,
+        duration: 25, // Чуть медленнее для премиальности
+        ease: "none",
+      }
+    );
+
+    /** @type {any} */
+    let resetDelay = null;
+
+    ScrollTrigger.create({
+      trigger: document.body,
+      start: "top top",
+      end: "bottom bottom",
+      onUpdate: (/** @type {any} */ self) => {
+        const velocity = self.getVelocity();
+        
+        // Плавное ускорение от скролла
+        let speed = 1 + Math.abs(velocity) / 2500;
+        speed = Math.min(speed, 4); // Максимум в 4 раза
+
+        tween.timeScale(speed);
+
+        // Ограничиваем наклон до 8 градусов (мягкий, премиальный наклон)
+        const skew = gsap.utils.clamp(-8, 8, velocity / 250);
+        gsap.set(track, { skewX: skew * direction });
+
+        // Сброс скорости при остановке скролла
+        if (resetDelay) resetDelay.kill();
+        resetDelay = gsap.delayedCall(0.2, () => {
+          gsap.to(tween, { timeScale: 1, duration: 1.5, ease: "power2.out" });
+          gsap.to(track, { skewX: 0, duration: 1.5, ease: "power2.out" });
+        });
+      },
+    });
+  });
+
+  // ==========================================
+  // ОСТАЛЬНЫЕ АНИМАЦИИ
+  // ==========================================
   const mm = gsap.matchMedia();
 
   mm.add("(prefers-reduced-motion: no-preference)", () => {
     
-    // Анимация Hero (построчно)
     const heroTl = gsap.timeline();
     heroTl.from(".hero-label", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out" })
-          .from(".hero h1 .word", { 
-            y: 50, opacity: 0, duration: 1, stagger: 0.1, ease: "power3.out" 
-          }, "-=0.6")
+          .from(".hero h1 .word", { y: 50, opacity: 0, duration: 1, stagger: 0.1, ease: "power3.out" }, "-=0.6")
           .from(".hero-desc", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out" }, "-=0.6")
           .from(".hero-actions", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out" }, "-=0.6");
 
-    // Проекты
     /** @type {HTMLElement[]} */
     const projects = gsap.utils.toArray(".project");
     projects.forEach((project) => {
@@ -149,13 +197,11 @@ if (gsap && ScrollTrigger) {
       }
     });
 
-    // Услуги
     gsap.from(".service-card", {
       scrollTrigger: { trigger: ".services-grid", start: "top 85%" },
       y: 40, opacity: 0, duration: 0.8, stagger: 0.2, ease: "power3.out"
     });
 
-    // Обо мне
     gsap.from(".about-image", {
       scrollTrigger: { trigger: ".about-content", start: "top 85%" },
       x: -30, opacity: 0, duration: 1, ease: "power3.out"
@@ -169,7 +215,6 @@ if (gsap && ScrollTrigger) {
       y: 30, opacity: 0, duration: 0.8, stagger: 0.15, ease: "power3.out"
     });
 
-    // Контакты
     gsap.from(".contact-text, .contact-links", {
       scrollTrigger: { trigger: ".contact-content", start: "top 85%" },
       y: 30, opacity: 0, duration: 0.8, stagger: 0.2, ease: "power3.out"
