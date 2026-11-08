@@ -20,8 +20,18 @@ body {
   color: var(--text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  cursor: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Разрешаем выделение только осмысленному контенту */
+p, .skill-group li, .contact-links a {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 /* NOISE OVERLAY */
@@ -35,30 +45,29 @@ body {
 }
 
 /* CUSTOM CURSOR */
-.cursor {
+.cursor, .cursor-dot {
+  display: none;
   position: fixed;
   top: 0; left: 0;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+.cursor {
   width: 24px; height: 24px;
   border: 1px solid #fff;
-  pointer-events: none;
   z-index: 10000;
   transform: translate(-50%, -50%);
-  mix-blend-mode: difference;
-  will-change: transform, width, height, background-color;
   transition: width 0.3s var(--ease), height 0.3s var(--ease), background-color 0.3s var(--ease);
 }
 
 .cursor-dot {
-  position: fixed;
-  top: 0; left: 0;
   width: 4px; height: 4px;
   border-radius: 50%;
   background: #fff;
-  pointer-events: none;
   z-index: 10001;
   transform: translate(-50%, -50%);
-  mix-blend-mode: difference;
-  will-change: transform;
 }
 
 .cursor.is-hover {
@@ -71,6 +80,9 @@ body {
 }
 
 @media (min-width: 969px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .cursor, .cursor-dot {
+    display: block;
+  }
   *, *::before, *::after {
     cursor: none !important;
   }
@@ -86,6 +98,7 @@ body {
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
 }
 
+/* --- ОБНОВЛЕННЫЙ ЛОГОТИП --- */
 .logo {
   font-family: var(--mono); font-size: 20px; font-weight: 500;
   color: var(--text); text-decoration: none;
@@ -93,12 +106,19 @@ body {
 }
 .logo-short { display: inline-block; }
 .logo-full {
-  display: inline-block; overflow: hidden;
-  clip-path: inset(0 100% 0 0);
-  transition: clip-path 0.5s var(--ease);
+  display: inline-block; 
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease), letter-spacing 0.4s var(--ease);
   margin-left: 4px;
+  letter-spacing: -1px;
 }
-.logo:hover .logo-full { clip-path: inset(0 0 0 0); }
+.logo:hover .logo-full { 
+  opacity: 1;
+  transform: translateX(0);
+  letter-spacing: 0px; /* Легкое расширение при появлении */
+}
+/* --------------------------- */
 
 .nav-links { display: flex; gap: 40px; list-style: none; }
 .nav-links a {
@@ -122,7 +142,9 @@ body {
 
 /* HERO */
 .hero {
-  min-height: 100vh; display: flex; align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex; align-items: center;
   padding: 140px 60px 80px;
 }
 .hero-inner { max-width: 1400px; margin: 0 auto; width: 100%; }
@@ -132,8 +154,10 @@ body {
 }
 .hero h1 {
   font-size: clamp(48px, 7vw, 110px); font-weight: 400;
-  line-height: 1.05; letter-spacing: -3px; margin-bottom: 40px;
+  line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 40px;
 }
+.hero h1 .line { display: block; }
+.hero h1 .word { display: inline-block; }
 .hero h1 em { font-style: italic; color: var(--accent); }
 .hero-desc {
   font-size: 18px; color: var(--muted); max-width: 600px;
@@ -145,7 +169,8 @@ body {
 .btn {
   font-family: var(--mono); font-size: 13px;
   padding: 14px 28px; text-decoration: none;
-  border-radius: 4px; transition: all 0.3s var(--ease);
+  border-radius: 4px;
+  transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
   display: inline-block;
 }
 .btn-primary {
@@ -160,7 +185,7 @@ body {
 .btn-outline:hover { border-color: var(--text); }
 
 /* ============================================================
-   REACTIVE MARQUEE (Bulletproof Typography Version)
+   REACTIVE MARQUEE (Обновленный)
    ============================================================ */
 .marquee-section {
   padding: 40px 0;
@@ -182,7 +207,7 @@ body {
   width: 100%;
   overflow: visible;
   white-space: nowrap;
-  padding: 20px 0; /* Запас по высоте, чтобы наклон не обрезался */
+  padding: 20px 0;
 }
 
 .marquee-track {
@@ -203,23 +228,28 @@ body {
   line-height: 1.2;
 }
 
-/* Верхняя строка (Жирная, черная) */
 .marquee-row--bold .marquee-group {
   font-weight: 700;
   color: var(--text);
 }
 
-/* Нижняя строка (Тонкая, серая) */
+/* --- НОВАЯ НИЖНЯЯ СТРОКА (ГРАДИЕНТ) --- */
 .marquee-row--light .marquee-group {
   font-weight: 400;
-  color: var(--muted);
+  color: transparent;
+  background: linear-gradient(90deg, #6b6b68 0%, #c0c0bb 50%, #6b6b68 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
+/* ------------------------------------------- */
 
+/* --- ЧУТЬ БОЛЕЕ ИЗЯЩНЫЕ ПЛЮСЫ --- */
 .marquee-group .sep {
   font-family: var(--mono);
-  font-size: 24px;
-  font-weight: 400;
+  font-size: 20px; 
+  font-weight: 300;
   color: var(--accent);
+  opacity: 0.8;
 }
 
 /* SECTIONS */
@@ -240,20 +270,20 @@ section { padding: 140px 60px; }
   display: flex; flex-direction: column; gap: 140px;
 }
 .project {
-  display: grid; 
-  grid-template-columns: 1.3fr 1fr; 
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
   gap: 80px; align-items: center;
 }
-.project-alt { 
-  grid-template-columns: 1fr 1.3fr; 
+.project-alt {
+  grid-template-columns: 1fr 1.3fr;
 }
 .project-alt .project-info { order: 1; }
 .project-alt .project-image { order: 2; }
 
 .project-image {
   overflow: hidden; border-radius: 4px;
-  background: var(--border); 
-  aspect-ratio: 16 / 9; 
+  background: var(--border);
+  aspect-ratio: 16 / 9;
   transition: box-shadow 0.4s var(--ease), transform 0.4s var(--ease);
 }
 .project:hover .project-image {
@@ -261,15 +291,14 @@ section { padding: 140px 60px; }
   box-shadow: 0 20px 60px rgba(0,0,0,0.08);
 }
 
-/* ЭФФЕКТ ДЛЯ ВСЕХ КАРТИНОК (Ч/Б при наведении) */
 .project-image img {
   width: 100%; height: 100%; object-fit: cover;
-  display: block; 
+  display: block;
   filter: grayscale(100%) contrast(1.1);
   transition: transform 0.8s var(--ease), filter 0.8s var(--ease);
 }
-.project:hover .project-image img { 
-  transform: scale(1.03); 
+.project:hover .project-image img {
+  transform: scale(1.03);
   filter: grayscale(0%) contrast(1);
 }
 
@@ -381,14 +410,12 @@ section { padding: 140px 60px; }
     transition-duration: 0.01ms !important; scroll-behavior: auto !important;
     cursor: auto !important;
   }
-  .cursor, .cursor-dot { display: none; }
   .marquee-row { white-space: normal; }
   .marquee-track { flex-wrap: wrap; }
 }
 
 /* RESPONSIVE */
 @media (max-width: 968px) {
-  body { cursor: auto; }
   .nav { padding: 20px 24px; }
   .nav-toggle { display: block; }
   .nav-links {
@@ -403,12 +430,17 @@ section { padding: 140px 60px; }
 
   section { padding: 100px 24px; }
   .hero { padding: 120px 24px 60px; }
-  
-  .cursor, .cursor-dot { display: none; }
+
+  /* Мобильный логотип всегда раскрыт */
+  .logo-full { 
+    opacity: 1; 
+    transform: none; 
+    letter-spacing: 0; 
+  }
 
   .marquee-group { font-size: 24px; gap: 20px; padding-right: 20px; }
   .marquee-row { padding: 15px 0; }
-  
+
   .project, .project-alt { grid-template-columns: 1fr; gap: 40px; }
   .project-alt .project-info { order: 1; }
   .project-alt .project-image { order: 2; }

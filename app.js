@@ -1,6 +1,8 @@
 // @ts-check
 
 // Smooth scroll
+// Фикс: scrollTo запускаем в следующем кадре — чтобы closeMenu (мобильное меню)
+// успел снять body.overflow="hidden" и не блокировал прокрутку.
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", (e) => {
     /** @type {string | null} */
@@ -10,9 +12,11 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     const target = document.querySelector(href);
     if (!target) return;
     e.preventDefault();
-    window.scrollTo({
-      top: target.getBoundingClientRect().top + window.scrollY - 80,
-      behavior: "smooth",
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: target.getBoundingClientRect().top + window.scrollY - 80,
+        behavior: "smooth",
+      });
     });
   });
 });
@@ -22,20 +26,38 @@ const navToggle = /** @type {HTMLButtonElement | null} */ (document.querySelecto
 const navLinks = /** @type {HTMLElement | null} */ (document.querySelector(".nav-links"));
 
 if (navToggle && navLinks) {
+  const navToggleEl = navToggle;
+  const navLinksEl = navLinks;
+
   const closeMenu = () => {
-    navToggle.classList.remove("is-open");
-    navLinks.classList.remove("is-open");
-    navToggle.setAttribute("aria-expanded", "false");
+    navToggleEl.classList.remove("is-open");
+    navLinksEl.classList.remove("is-open");
+    navToggleEl.setAttribute("aria-expanded", "false");
     document.body.style.overflow = "";
   };
-  navToggle.addEventListener("click", () => {
-    const isOpen = navLinks.classList.toggle("is-open");
-    navToggle.classList.toggle("is-open", isOpen);
-    navToggle.setAttribute("aria-expanded", String(isOpen));
+
+  navToggleEl.addEventListener("click", () => {
+    const isOpen = navLinksEl.classList.toggle("is-open");
+    navToggleEl.classList.toggle("is-open", isOpen);
+    navToggleEl.setAttribute("aria-expanded", String(isOpen));
     document.body.style.overflow = isOpen ? "hidden" : "";
   });
-  navLinks.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
+
+  navLinksEl.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
+  });
+
+  // Клик вне меню закрывает его
+  document.addEventListener("click", (e) => {
+    if (!navLinksEl.classList.contains("is-open")) return;
+    /** @type {Node | null} */
+    const target = /** @type {any} */ (e.target);
+    if (!target) return;
+    if (navToggleEl.contains(target) || navLinksEl.contains(target)) return;
+    closeMenu();
+  });
 }
 
 // ==========================================
@@ -99,6 +121,7 @@ magneticElements.forEach((el) => {
 // ==========================================
 const gsap = /** @type {any} */ (window).gsap;
 const ScrollTrigger = /** @type {any} */ (window).ScrollTrigger;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 if (gsap && ScrollTrigger) {
   gsap.registerPlugin(ScrollTrigger);
@@ -106,59 +129,68 @@ if (gsap && ScrollTrigger) {
   // ==========================================
   // РЕАКТИВНЫЙ MARQUEE
   // ==========================================
-  const marqueeRows = document.querySelectorAll('.marquee-row');
+  if (!prefersReducedMotion) {
+    const marqueeRows = document.querySelectorAll('.marquee-row');
 
-  marqueeRows.forEach((row) => {
-    const track = row.querySelector('.marquee-track');
-    if (!track) return;
+    marqueeRows.forEach((row) => {
+      const track = row.querySelector('.marquee-track');
+      if (!track) return;
 
-    const isRight = row.getAttribute('data-direction') === 'right';
-    const direction = isRight ? 1 : -1;
+      const isRight = row.getAttribute('data-direction') === 'right';
+      const direction = isRight ? 1 : -1;
 
-    // Дублируем контент ровно 2 раза для бесшовности
-    const content = track.innerHTML;
-    track.innerHTML = content + content;
+      // Дублируем контент ровно 2 раза для бесшовности
+      const content = track.innerHTML;
+      track.innerHTML = content + content;
 
-    // Создаем анимацию с правильным стартом для левой/правой строки
-    const tween = gsap.fromTo(track, 
-      { xPercent: isRight ? -50 : 0 },
-      {
-        xPercent: isRight ? 0 : -50,
-        repeat: -1,
-        duration: 25, // Чуть медленнее для премиальности
-        ease: "none",
-      }
-    );
+      // a11y: скрываем дубликаты от скринридеров
+      const groups = track.querySelectorAll('.marquee-group');
+      const half = Math.ceil(groups.length / 2);
+      groups.forEach((group, index) => {
+        if (index >= half) group.setAttribute('aria-hidden', 'true');
+      });
 
-    /** @type {any} */
-    let resetDelay = null;
+      // Создаем анимацию с правильным стартом для левой/правой строки
+      const tween = gsap.fromTo(track,
+        { xPercent: isRight ? -50 : 0 },
+        {
+          xPercent: isRight ? 0 : -50,
+          repeat: -1,
+          duration: 25,
+          ease: "none",
+        }
+      );
 
-    ScrollTrigger.create({
-      trigger: document.body,
-      start: "top top",
-      end: "bottom bottom",
-      onUpdate: (/** @type {any} */ self) => {
-        const velocity = self.getVelocity();
-        
-        // Плавное ускорение от скролла
-        let speed = 1 + Math.abs(velocity) / 2500;
-        speed = Math.min(speed, 4); // Максимум в 4 раза
+      /** @type {any} */
+      let resetDelay = null;
 
-        tween.timeScale(speed);
+      ScrollTrigger.create({
+        trigger: document.body,
+        start: "top top",
+        end: "bottom bottom",
+        onUpdate: (/** @type {any} */ self) => {
+          const velocity = self.getVelocity();
 
-        // Ограничиваем наклон до 8 градусов (мягкий, премиальный наклон)
-        const skew = gsap.utils.clamp(-8, 8, velocity / 250);
-        gsap.set(track, { skewX: skew * direction });
+          // Плавное ускорение от скролла
+          let speed = 1 + Math.abs(velocity) / 2500;
+          speed = Math.min(speed, 4);
 
-        // Сброс скорости при остановке скролла
-        if (resetDelay) resetDelay.kill();
-        resetDelay = gsap.delayedCall(0.2, () => {
-          gsap.to(tween, { timeScale: 1, duration: 1.5, ease: "power2.out" });
-          gsap.to(track, { skewX: 0, duration: 1.5, ease: "power2.out" });
-        });
-      },
+          tween.timeScale(speed);
+
+          // Ограничиваем наклон до 8 градусов
+          const skew = gsap.utils.clamp(-8, 8, velocity / 250);
+          gsap.set(track, { skewX: skew * direction });
+
+          // Сброс скорости при остановке скролла
+          if (resetDelay) resetDelay.kill();
+          resetDelay = gsap.delayedCall(0.2, () => {
+            gsap.to(tween, { timeScale: 1, duration: 1.5, ease: "power2.out" });
+            gsap.to(track, { skewX: 0, duration: 1.5, ease: "power2.out" });
+          });
+        },
+      });
     });
-  });
+  }
 
   // ==========================================
   // ОСТАЛЬНЫЕ АНИМАЦИИ
@@ -166,7 +198,7 @@ if (gsap && ScrollTrigger) {
   const mm = gsap.matchMedia();
 
   mm.add("(prefers-reduced-motion: no-preference)", () => {
-    
+
     const heroTl = gsap.timeline();
     heroTl.from(".hero-label", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out" })
           .from(".hero h1 .word", { y: 50, opacity: 0, duration: 1, stagger: 0.1, ease: "power3.out" }, "-=0.6")
@@ -178,7 +210,7 @@ if (gsap && ScrollTrigger) {
     projects.forEach((project) => {
       const img = project.querySelector(".project-image");
       const info = project.querySelector(".project-info");
-      
+
       gsap.from(img, {
         scrollTrigger: { trigger: project, start: "top 80%" },
         y: 50, opacity: 0, duration: 1, ease: "power3.out"
@@ -187,7 +219,7 @@ if (gsap && ScrollTrigger) {
         scrollTrigger: { trigger: project, start: "top 80%" },
         y: 30, opacity: 0, duration: 1, delay: 0.2, ease: "power3.out"
       });
-      
+
       const imgTag = project.querySelector(".project-image img");
       if (imgTag) {
         gsap.to(imgTag, {
